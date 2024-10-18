@@ -1,38 +1,186 @@
-.App {
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: "Poppins", sans-serif !important;
+  background-color: #d5d5d5 !important;
+  overflow-x: hidden;
+}
+
+div,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+span {
+  font-family: "Poppins", sans-serif !important;
+}
+
+.gradient-bg {
+  background: linear-gradient(180deg, #003087 0%, #449bd5 100%);
+}
+.gradient-red {
+  background: linear-gradient(
+    201.18deg,
+    rgba(255, 222, 222, 0.5) 3.14%,
+    rgba(255, 250, 250, 0.5) 86.04%
+  );
+}
+.gradient-icon {
+  filter: brightness(0) saturate(100%) invert(14%) sepia(75%) saturate(3272%)
+    hue-rotate(201deg) brightness(95%) contrast(101%);
+}
+.custom-card .ant-card .ant-card-body {
+  padding: 16px 32px !important;
+}
+.pres-card .ant-card .ant-card-body {
+  padding: 12px !important;
+}
+:where(.css-dev-only-do-not-override-1hpnbz2).ant-table-wrapper
+  .ant-table-thead
+  > tr
+  > th,
+:where(.css-dev-only-do-not-override-1hpnbz2).ant-table-wrapper
+  .ant-table-thead
+  > tr
+  > td {
+  background: #fafbfc !important;
+}
+
+.ant-table-tbody > tr.ant-table-row:hover > td {
+  background: #fafbfc !important;
+}
+:where(.css-dev-only-do-not-override-1hpnbz2).ant-radio-group {
+  display: none !important;
+}
+:where(.css-dev-only-do-not-override-1hpnbz2).ant-picker-calendar
+  .ant-picker-cell
+  .ant-picker-cell-inner {
+  border-radius: 12px !important;
+}
+:where(.css-dev-only-do-not-override-1hpnbz2).ant-picker-calendar
+  .ant-picker-cell-in-view.ant-picker-cell-today
+  .ant-picker-cell-inner::before {
+  border: none !important;
+}
+::-webkit-scrollbar {
+  width: 8px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #eff1f8;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #204496;
+  border-radius: 10px;
+}
+.recommend-card1 {
+  border-radius: 30px;
+  background: linear-gradient(201deg, #ecfff0 3.14%, #f2fff8 86.04%), #fff;
+}
+
+.recommend-card2 {
+  border-radius: 30px;
+  background: linear-gradient(180deg, #e9f6ff 0%, #f8fcff 100%);
+}
+
+.recommend-card3 {
+  border-radius: 30px;
+  background: linear-gradient(180deg, #cef0ff 0%, #f2fbff 100%);
+}
+
+.title-color1 {
+  color: #00c247;
+  border-color: #00c247;
+}
+
+.title-color2 {
+  color: #449bd5;
+  border-color: #449bd5;
+}
+
+.title-color3 {
+  color: #32ade6;
+  border-color: #32ade6;
+}
+.flip-card {
+  perspective: 1000px;
+  cursor: pointer;
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
   text-align: center;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.flip-card.is-flipped .flip-card-inner {
+  transform: rotateY(180deg);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.flip-card-front,
+.flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  border-radius: 20px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.flip-card-front {
+  background-color: #fff;
+  color: black;
 }
 
-.App-link {
-  color: #61dafb;
+.flip-card-back {
+  background-color: #fff;
+  color: black;
+  transform: rotateY(180deg);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.flip-card:hover {
+  border-radius: 30px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.custom-steps .ant-steps-item-active .ant-steps-item-icon {
+  background-color: #204496;
+  border-color: #204496;
+  color: #fff;
+}
+.custom-steps .ant-steps-item-finish .ant-steps-item-icon {
+  background-color: #204496;
+  color: #fff;
+  border-color: #204496;
+}
+.custom-steps .ant-steps-item-finish .ant-steps-item-tail::after {
+  background-color: #204496;
+}
+.custom-steps .ant-steps-item-finish .ant-steps-item-icon > .ant-steps-icon {
+  color: #fff;
+}
+
+.custom-tabs .ant-tabs-tab :hover {
+  color: #204496 !important;
+}
+.custom-tabs .ant-tabs-nav::before {
+  display: none !important;
+}
+
+.custom-tabs .ant-tabs-ink-bar {
+  background: #204496 !important;
+}
+
+.custom-tabs .ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: #204496 !important;
+  font-weight: 600;
 }
