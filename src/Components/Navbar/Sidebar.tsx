@@ -3,6 +3,7 @@ import { Layout as MainLayout } from "antd";
 import { Link, useLocation } from "react-router-dom";
 import HomeIcon from "../../Components/Assets/Images/Home-icon.svg";
 import SaveIcon from "../../Components/Assets/Images/Save-icon.svg";
+import LogoutIcon from "../../Components/Assets/Images/Logout-icon.svg";
 
 const { Sider } = MainLayout;
 
@@ -22,6 +23,11 @@ const navItems: NavItem[] = [
     label: "Save",
     link: "/PatientDashboard",
     icon: SaveIcon,
+  },
+  {
+    label: "Save",
+    link: "http://4.193.105.54/customer360",
+    icon: LogoutIcon,
   },
 ];
 
