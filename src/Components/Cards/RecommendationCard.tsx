@@ -199,7 +199,7 @@ const RecommendationCard: React.FC = () => {
                           {rec.duration}
                         </h3>
                       </div>
-                      <img src={rec.icon} alt={rec.title} className="w-[35%]" />
+                      <img src={rec.icon} alt={rec.title} className="w-24 h-24 object-contain" />
                     </div>
                   </div>
                   <div
@@ -219,7 +219,7 @@ const RecommendationCard: React.FC = () => {
                           {rec.duration}
                         </h3>
                       </div>
-                      <img src={rec.icon} alt={rec.title} className="w-[35%]" />
+                      <img src={rec.icon} alt={rec.title} className="w-24 h-24 object-contain" />
                     </div>
                   </div>
                 </div>

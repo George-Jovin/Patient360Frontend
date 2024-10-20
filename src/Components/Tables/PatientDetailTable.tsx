@@ -105,7 +105,7 @@ const PatientDetailTable: React.FC = () => {
       <Table
         columns={columns}
         dataSource={patientData}
-        pagination={false}
+        // pagination={false}
         className="w-full cursor-pointer custom-table mt-4"
         size="middle"
       />

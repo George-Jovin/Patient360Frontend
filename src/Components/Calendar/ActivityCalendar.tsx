@@ -8,8 +8,10 @@ import {
   Typography,
   Row,
   Col,
+  Input
 } from "antd";
 import DoctorProfile from "../Assets/Images/Doctorprofile-icon.svg";
+import { SearchOutlined } from "@ant-design/icons";
 import type { Dayjs } from "dayjs";
 import dayjs from 'dayjs'; // Import dayjs
 
@@ -121,11 +123,17 @@ const AppointmentCalendar: React.FC = () => {
         <Text className="text-[black] font-bold text-lg">
         Activity Details
       </Text>
+      
           <div className="flex gap-3 py-4">
             <Badge color="#34C759" text="Appointment" />
             <Badge color="#204496" text="Surgery" />
           </div>
-          <div className="max-h-64 overflow-y-auto">
+          <Input
+        prefix={<SearchOutlined className="text-gray-400" />}
+        placeholder="Search here..."
+        className="rounded-lg bg-gray-50"
+      />
+          <div className="max-h-64 overflow-y-auto py-2">
             <List
               itemLayout="horizontal"
               dataSource={filteredAppointments}

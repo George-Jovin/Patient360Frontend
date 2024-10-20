@@ -118,7 +118,7 @@ const PrescriptionCard: React.FC = () => {
       <Text className="text-[black] font-bold text-lg">
         Prescription Tracking
       </Text>
-      <div className="max-h-[600px] overflow-y-auto pres-card mt-4 pr-2">
+      <div className="max-h-[375px] overflow-y-auto pres-card mt-4 pr-2">
         {prescriptions.map((prescription) => (
           <Card key={prescription.id} className="mb-4 shadow-custom">
             <div className="flex justify-between items-center">

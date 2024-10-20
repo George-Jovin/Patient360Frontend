@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { Table, Tag, Card, Input, Row, Col,Typography } from "antd";
+import { Table, Tag, Card, Input, Row, Col, Typography } from "antd";
 import { useNavigate } from "react-router-dom";
 import { SearchOutlined } from "@ant-design/icons";
-const {Text} = Typography
+const { Text } = Typography;
 
 const executiveData = [
   {
@@ -54,7 +54,7 @@ const executiveData = [
 
 const ExecutiveTable: React.FC = () => {
   const [searchText, setSearchText] = useState("");
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
@@ -94,9 +94,7 @@ const ExecutiveTable: React.FC = () => {
 
   return (
     <Card className="w-full shadow-custom rounded-3xl">
-      <Text className="text-[black] font-bold text-lg">
-        Patient List
-      </Text>
+      <Text className="text-[black] font-bold text-lg">Patient List</Text>
       <Row>
         <Col span={18}></Col>
         <Col span={6}>
@@ -104,8 +102,8 @@ const ExecutiveTable: React.FC = () => {
             placeholder="Search by Name"
             value={searchText}
             onChange={handleSearch}
-            prefix={<SearchOutlined />}
-            className="mb-4 w-full rounded-3xl bg-[#FAFBFC]"
+            prefix={<SearchOutlined className="text-gray-400" />}
+            className="mb-4 w-full rounded-lg bg-gray-50"
           />
         </Col>
       </Row>

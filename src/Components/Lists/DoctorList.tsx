@@ -46,7 +46,7 @@ const DoctorList: React.FC = () => {
   return (
     <Card className="w-full shadow-custom rounded-3xl">
       <Text className="text-[black] font-bold text-lg">Doctor List</Text>
-      <div className="max-h-72 overflow-y-auto h-72 mt-4">
+      <div className="max-h-72 overflow-y-auto h-72 mt-5">
         <List
           itemLayout="horizontal"
           dataSource={doctors}

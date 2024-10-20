@@ -80,6 +80,16 @@ const appointments: Appointment[] = [
     status: "upcoming",
     avatar: DoctorProfile,
   },
+  {
+    id: "7",
+    date: "2024-10-22",
+    time: "09:00 AM - 10:00 AM",
+    doctor: "Dr. Edison",
+    type: "routine",
+    status: "upcoming",
+    avatar: DoctorProfile,
+  },
+  
 ];
 
 const calculateDays = (appointmentDate: string) => {
@@ -184,7 +194,7 @@ const PatientCalendar: React.FC = () => {
             className="appointment-tabs"
           >
             <TabPane tab="Upcoming Appointments" key="upcoming">
-              <div className="max-h-60 overflow-y-auto pres-card pr-2">
+              <div className="max-h-[475px] overflow-y-auto pres-card pr-2">
                 {filteredAppointments.map((appointment) => (
                   <AppointmentCard
                     key={appointment.id}
@@ -194,7 +204,7 @@ const PatientCalendar: React.FC = () => {
               </div>
             </TabPane>
             <TabPane tab="Past Visits" key="past">
-              <div className="max-h-60 overflow-y-auto pres-card pr-2">
+              <div className="max-h-[475px] overflow-y-auto pres-card pr-2">
                 {filteredAppointments.map((appointment) => (
                   <AppointmentCard
                     key={appointment.id}
