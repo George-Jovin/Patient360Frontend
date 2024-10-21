@@ -1,5 +1,6 @@
-import React from "react";
-import { Row, Col, DatePicker } from "antd";
+import React, { useState, useEffect } from "react";
+import { Row, Col, DatePicker, message } from "antd";
+import { useParams } from "react-router-dom";
 import type { Dayjs } from "dayjs";
 import Profile from "../Components/Cards/Profile";
 import RiskScoreLine from "../Components/Charts/RiskScoreLine";
@@ -10,10 +11,16 @@ import PatientCalendar from "../Components/Calendar/PatientCalendar";
 import RecommendationCard from "../Components/Cards/RecommendationCard";
 import PatientDetailTable from "../Components/Tables/PatientDetailTable";
 import PrescriptionCard from "../Components/Cards/PrescriptionCard";
+import ApiService from "../Api/Apiservices";
+import Spinner from "../Components/Spinner/Spinner";
 
 const { RangePicker } = DatePicker;
-
 const PatientDashboard: React.FC = () => {
+  const { patientid } = useParams<{ patientid: string }>();
+  const [loading, setLoading] = useState(true);
+  const patientIdNumber = patientid ? Number(patientid) : null;
+  const [patientData, setPatientData] = useState<any>(null);
+
   const handleDateChange = (
     dates: null | (Dayjs | null)[],
     dateStrings: string[]
@@ -26,8 +33,27 @@ const PatientDashboard: React.FC = () => {
     }
   };
 
+  useEffect(() => {
+    const fetchData = async (id: number) => {
+      try {
+        const apiService = new ApiService();
+        const response = await apiService.fetchPatientData(id);
+        setPatientData(response.data);
+      } catch (err) {
+        console.error("Error fetching patient data:", err);
+        message.error("Failed to fetch patient data")
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (patientIdNumber) {
+      fetchData(patientIdNumber);
+    }
+  }, [patientIdNumber]);
   return (
     <div>
+      <Spinner loading={loading}>
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-[#05004E] font-bold text-[20px]">
           PATIENT DASHBOARD
@@ -42,7 +68,7 @@ const PatientDashboard: React.FC = () => {
       <Row gutter={[24, 24]}>
         <Col span={12}>
           <div className="space-y-6">
-            <Profile />
+            <Profile patientData={patientData}/>
             <HealthTrendLine />
           </div>
         </Col>
@@ -57,7 +83,7 @@ const PatientDashboard: React.FC = () => {
                 </div>
               </Col>
               <Col span={12} className="relative">
-                <div className="absolute inset-0 flex flex-col mx-2 h-[1030px]">
+                <div className="absolute inset-0 flex flex-col mx-2 h-[1060px]">
                   <PatientCalendar />
                 </div>
               </Col>
@@ -65,14 +91,13 @@ const PatientDashboard: React.FC = () => {
           </div>
         </Col>
       </Row>
-
       <Row gutter={[24, 24]} className="mt-4">
         <Col span={18}>
-          <RecommendationCard />
+          <RecommendationCard patientData={patientData}/>
         </Col>
       </Row>
 
-      <Row gutter={24} className="mt-4">
+      <Row gutter={[24, 24]} className="mt-4">
         <Col span={18}>
           <PatientDetailTable />
         </Col>
@@ -80,6 +105,7 @@ const PatientDashboard: React.FC = () => {
           <PrescriptionCard />
         </Col>
       </Row>
+      </Spinner>
     </div>
   );
 };

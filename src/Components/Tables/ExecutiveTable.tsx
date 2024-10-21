@@ -4,55 +4,23 @@ import { useNavigate } from "react-router-dom";
 import { SearchOutlined } from "@ant-design/icons";
 const { Text } = Typography;
 
-const executiveData = [
-  {
-    key: "1",
-    sno: "1",
-    name: "John Doe",
-    uniqueId: "UID12345",
-    gender: "Male",
-    lastUpdated: "Today",
-    riskScore: 35,
-  },
-  {
-    key: "2",
-    sno: "2",
-    name: "Jane Smith",
-    uniqueId: "UID54321",
-    gender: "Female",
-    lastUpdated: "3 days ago",
-    riskScore: 55,
-  },
-  {
-    key: "3",
-    sno: "3",
-    name: "Alfred",
-    uniqueId: "UID67891",
-    gender: "Male",
-    lastUpdated: "22 May 2024",
-    riskScore: 80,
-  },
-  {
-    key: "4",
-    sno: "4",
-    name: "George Smith",
-    uniqueId: "UID67896 ",
-    gender: "Male",
-    lastUpdated: "25 March 2024",
-    riskScore: 20,
-  },
-  {
-    key: "5",
-    sno: "5",
-    name: "Maria",
-    uniqueId: "UID67128",
-    gender: "Female",
-    lastUpdated: "25 Nov 2024",
-    riskScore: 60,
-  },
-];
+interface ExecutiveData {
+  key: string;
+  sno: string;
+  name: string;
+  patientid: number;
+  mobileno: string;
+  // gender: string;
+  // lastUpdated: string;
+  riskScore: number;
+}
 
-const ExecutiveTable: React.FC = () => {
+interface ExecutiveTableProps {
+  data: ExecutiveData[];
+}
+
+const ExecutiveTable: React.FC<ExecutiveTableProps> = ({ data }) => {
+  console.log(data);
   const [searchText, setSearchText] = useState("");
   const navigate = useNavigate();
 
@@ -60,20 +28,25 @@ const ExecutiveTable: React.FC = () => {
     setSearchText(e.target.value);
   };
 
-  const filteredData = executiveData.filter((item) =>
+  const filteredData = data?.filter((item) =>
     item.name.toLowerCase().includes(searchText.toLowerCase())
   );
 
   const columns = [
-    { title: "S.No", dataIndex: "sno", key: "sno" },
+    {
+      title: "S.No",
+      key: "sno",
+      render: (_: any, __: any, index: number) => index + 1,
+    },
     { title: "Name", dataIndex: "name", key: "name" },
-    { title: "Unique ID", dataIndex: "uniqueId", key: "uniqueId" },
-    { title: "Gender", dataIndex: "gender", key: "gender" },
-    { title: "Last Updated", dataIndex: "lastUpdated", key: "lastUpdated" },
+    { title: "Unique ID", dataIndex: "patientid", key: "patientid" },
+    { title: "Phone Number", dataIndex: "mobileno", key: "mobileno" },
+    // { title: "Gender", dataIndex: "gender", key: "gender" },
+    // { title: "Last Updated", dataIndex: "lastUpdated", key: "lastUpdated" },
     {
       title: "Risk Score",
-      dataIndex: "riskScore",
-      key: "riskScore",
+      dataIndex: "riskrate",
+      key: "riskrate",
       render: (riskScore: number) => {
         let color = "";
         if (riskScore < 50) color = "green";
@@ -116,7 +89,7 @@ const ExecutiveTable: React.FC = () => {
         size="middle"
         onRow={(record) => ({
           onClick: () => {
-            navigate(`/PatientDashboard`);
+            navigate(`/PatientDashboard/${record.patientid}`);
           },
         })}
       />

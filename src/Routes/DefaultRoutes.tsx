@@ -15,7 +15,7 @@ const DefaultRoutes: React.FC = () => {
         <Route path="/Home" element={<Home />} />
         <Route path="/" element={<Navigate to="/Home" />} />
         <Route path="*" element={<Navigate to="/Home" />} />
-        <Route path="/PatientDashboard" element={<PatientDashboard />} />
+        <Route path="/PatientDashboard/:patientid" element={<PatientDashboard />} />
       </Routes>
     </DefaultLayout>
   );

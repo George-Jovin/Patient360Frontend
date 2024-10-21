@@ -1,13 +1,5 @@
 import React, { useState } from "react";
-import {
-  Calendar,
-  Badge,
-  Card,
-  Tabs,
-  Typography,
-  Row,
-  Col,
-} from "antd";
+import { Calendar, Badge, Card, Tabs, Typography, Row, Col } from "antd";
 import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
 import DoctorProfile from "../Assets/Images/Doctorprofile-icon.svg";
@@ -23,6 +15,8 @@ interface Appointment {
   type: "routine" | "followup";
   status: "upcoming" | "past";
   avatar: string;
+  summary?: string;
+  ailment?: string;
 }
 
 const appointments: Appointment[] = [
@@ -43,6 +37,9 @@ const appointments: Appointment[] = [
     type: "followup",
     status: "past",
     avatar: DoctorProfile,
+    summary:
+      "Maintain a healthy diet with reduced saturated fats to manage cholesterol and Follow-up check-up recommended in 6 months.",
+    ailment: "Kidney Issue",
   },
   {
     id: "3",
@@ -52,6 +49,9 @@ const appointments: Appointment[] = [
     type: "followup",
     status: "past",
     avatar: DoctorProfile,
+    summary:
+      "Maintain a healthy diet with reduced saturated fats to manage cholesterol and Follow-up check-up recommended in 6 months.",
+    ailment: "Heart Issue",
   },
   {
     id: "4",
@@ -61,6 +61,9 @@ const appointments: Appointment[] = [
     type: "followup",
     status: "past",
     avatar: DoctorProfile,
+    summary:
+      "Maintain a healthy diet with reduced saturated fats to manage cholesterol and Follow-up check-up recommended in 6 months.",
+    ailment: "Kidney Issue",
   },
   {
     id: "5",
@@ -89,7 +92,6 @@ const appointments: Appointment[] = [
     status: "upcoming",
     avatar: DoctorProfile,
   },
-  
 ];
 
 const calculateDays = (appointmentDate: string) => {
@@ -105,7 +107,7 @@ const calculateDays = (appointmentDate: string) => {
 const AppointmentCard: React.FC<{ appointment: Appointment }> = ({
   appointment,
 }) => (
-  <Card className="mb-4 shadow-custom">
+  <Card className="mb-4">
     <div className="flex justify-between items-center">
       <div className="flex flex-col">
         <Badge
@@ -127,6 +129,24 @@ const AppointmentCard: React.FC<{ appointment: Appointment }> = ({
         <Text strong>{appointment.doctor}</Text>
       </div>
     </div>
+    {appointment.status === "past" && appointment.summary && (
+      <div className="pt-4">
+        <hr className="pb-2" />
+        <div className="text-xs text-justify">
+          <span className="text-sm font-semibold">Summary : </span>
+          {appointment.summary}
+        </div>
+      </div>
+    )}
+    {appointment.status === "past" && appointment.ailment && (
+      <div className="pt-4">
+        <hr className="pb-2" />
+        <div className="text-xs text-justify">
+          <span className="text-sm font-semibold">Ailment : </span>
+          {appointment.ailment}
+        </div>
+      </div>
+    )}
   </Card>
 );
 
@@ -148,11 +168,9 @@ const PatientCalendar: React.FC = () => {
     <Card className="w-full shadow-custom rounded-3xl h-full custom-tabs">
       <Row gutter={[32, 32]}>
         <Col span={24}>
-        <Text className="text-[black] font-bold text-lg">
-        Appointments
-      </Text>
+          <Text className="text-[black] font-bold text-lg">Appointments</Text>
           <Calendar
-          className="mt-4"
+            className="mt-4"
             fullscreen={false}
             onSelect={(date) => setSelectedDate(date)}
             fullCellRender={(current) => {
@@ -178,10 +196,7 @@ const PatientCalendar: React.FC = () => {
             }}
           />
           <div className="flex gap-4 px-2 py-4">
-            <Badge
-              color="#204496"
-              text={"Upcoming Appointments"}
-            />
+            <Badge color="#204496" text={"Upcoming Appointments"} />
             <Badge color="#34C759" text={"Past Visits"} />
           </div>
         </Col>

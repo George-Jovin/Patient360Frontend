@@ -120,7 +120,7 @@ const PrescriptionCard: React.FC = () => {
       </Text>
       <div className="max-h-[375px] overflow-y-auto pres-card mt-4 pr-2">
         {prescriptions.map((prescription) => (
-          <Card key={prescription.id} className="mb-4 shadow-custom">
+          <Card key={prescription.id} className="mb-4">
             <div className="flex justify-between items-center">
               <div className="flex flex-col">
                 <Badge

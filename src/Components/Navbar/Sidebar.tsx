@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Layout as MainLayout } from "antd";
 import { Link, useLocation } from "react-router-dom";
 import HomeIcon from "../../Components/Assets/Images/Home-icon.svg";
-import SaveIcon from "../../Components/Assets/Images/Save-icon.svg";
+// import SaveIcon from "../../Components/Assets/Images/Save-icon.svg";
 import LogoutIcon from "../../Components/Assets/Images/Logout-icon.svg";
 
 const { Sider } = MainLayout;
@@ -19,11 +19,11 @@ const navItems: NavItem[] = [
     link: "/Home",
     icon: HomeIcon,
   },
-  {
-    label: "Save",
-    link: "/PatientDashboard",
-    icon: SaveIcon,
-  },
+  // {
+  //   label: "Save",
+  //   link: "/PatientDashboard",
+  //   icon: SaveIcon,
+  // },
   {
     label: "Save",
     link: "http://4.193.105.54/customer360",
@@ -38,7 +38,11 @@ const DefaultSidebar: React.FC = () => {
   useEffect(() => {
     const currentLink = location.pathname;
     const foundIndex = navItems.findIndex((item) => item.link === currentLink);
-    setActiveItem(foundIndex !== -1 ? foundIndex : -1);
+    if (currentLink.startsWith('/PatientDashboard')) {
+      setActiveItem(0); 
+    } else {
+      setActiveItem(foundIndex !== -1 ? foundIndex : -1);
+    }
   }, [location]);
 
   return (

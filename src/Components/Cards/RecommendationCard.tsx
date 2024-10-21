@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import { Card, Row, Col, Modal, Collapse, Steps,Typography } from "antd";
+import { Card, Row, Col, Modal, Collapse, Steps, Typography,message,Button } from "antd";
 import Icon1 from "../Assets/Images/Recommendation-icon1.svg";
 import Icon2 from "../Assets/Images/Recommendation-icon2.svg";
 import Icon3 from "../Assets/Images/Recommendation-icon3.svg";
-const {Text} = Typography
+import ApiService from "../../Api/Apiservices";
+
+const { Text } = Typography;
 
 interface Recommendation {
   title: string;
@@ -11,6 +13,19 @@ interface Recommendation {
   icon: string;
   cardClass: string;
   titleClass: string;
+}
+
+interface PlanData {
+  day: number;
+  plan: string;
+  isCompleted: boolean;
+}
+
+interface PatientData {
+  patientid: number;
+  Diet_PLAN: { [key: string]: string };
+  Exercise_PLAN: { [key: string]: string };
+  Routine_PLAN?: { [key: string]: string };
 }
 
 const recommendations: Recommendation[] = [
@@ -37,108 +52,18 @@ const recommendations: Recommendation[] = [
   },
 ];
 
-interface PlanData {
-  day: number;
-  plan: string;
-  isCompleted: boolean;
-}
-
-const dietPlanData: PlanData[] = [
-  {
-    day: 1,
-    plan: "Start your day with oatmeal and fruits. For lunch, have a quinoa bowl with vegetables. Dinner should include lean protein and green vegetables.",
-    isCompleted: false,
-  },
-  {
-    day: 2,
-    plan: "Breakfast with whole grain toast and eggs. Lunch with grilled chicken salad. Fish and roasted vegetables for dinner.",
-    isCompleted: false,
-  },
-  {
-    day: 3,
-    plan: "Yogurt parfait for breakfast. Turkey wrap for lunch. Lean beef stir-fry for dinner.",
-    isCompleted: false,
-  },
-  {
-    day: 4,
-    plan: "Start your day with a high-protein breakfast, such as eggs or Greek yogurt with fruit. For lunch and dinner, include lean proteins like chicken or fish, plenty of vegetables, and a portion of whole grains. Snacks can be fruits, nuts, or low-fat dairy to keep energy levels steady throughout the day.",
-    isCompleted: false,
-  },
-  {
-    day: 5,
-    plan: "Smoothie bowl for breakfast. Mediterranean salad for lunch. Grilled fish with quinoa for dinner.",
-    isCompleted: false,
-  },
-  {
-    day: 6,
-    plan: "Protein pancakes for breakfast. Tuna salad for lunch. Chicken breast with sweet potato for dinner.",
-    isCompleted: false,
-  },
-  {
-    day: 7,
-    plan: "Egg white omelet for breakfast. Greek salad for lunch. Tofu stir-fry for dinner.",
-    isCompleted: false,
-  },
-];
-
-const exercisePlanData: PlanData[] = [
-  { day: 1, plan: "30 minutes of brisk walking", isCompleted: false },
-  {
-    day: 2,
-    plan: "20 minutes of bodyweight exercises (push-ups, squats, lunges)",
-    isCompleted: false,
-  },
-  { day: 3, plan: "30 minutes of cycling", isCompleted: false },
-  {
-    day: 4,
-    plan: "Yoga or stretching session for 20 minutes",
-    isCompleted: false,
-  },
-  { day: 5, plan: "30 minutes of jogging or running", isCompleted: false },
-  {
-    day: 6,
-    plan: "Strength training with dumbbells for 25 minutes",
-    isCompleted: false,
-  },
-  {
-    day: 7,
-    plan: "45 minutes of swimming or water aerobics",
-    isCompleted: false,
-  },
-];
-
-const routinePlanData: PlanData[] = [
-  {
-    day: 1,
-    plan: "Wake up at 6 AM, meditate for 10 minutes",
-    isCompleted: false,
-  },
-  { day: 2, plan: "Read a book for 30 minutes before bed", isCompleted: false },
-  {
-    day: 3,
-    plan: "Practice a hobby or learn a new skill for 1 hour",
-    isCompleted: false,
-  },
-  { day: 4, plan: "Go to bed by 10 PM for proper sleep", isCompleted: false },
-  {
-    day: 5,
-    plan: "Take a 15-minute walk during lunch break",
-    isCompleted: false,
-  },
-  {
-    day: 6,
-    plan: "Declutter a small area of your living space",
-    isCompleted: false,
-  },
-  { day: 7, plan: "Prepare meals for the next week", isCompleted: false },
-];
-
-const RecommendationCard: React.FC = () => {
-  const [flippedCards, setFlippedCards] = useState<{ [key: number]: boolean }>({});
+const RecommendationCard: React.FC<{ patientData: PatientData }> = ({
+  patientData,
+}) => {
+  const apiservice = new ApiService();
+  const [flippedCards, setFlippedCards] = useState<{ [key: number]: boolean }>(
+    {}
+  );
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [activeCardIndex, setActiveCardIndex] = useState<number | null>(null);
   const [activePanel, setActivePanel] = useState<string | string[]>(["1"]);
-  const [currentStep] = useState<number>(1);
+  const [currentStep, setCurrentStep] = useState<number>(1);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const showModal = (index: number) => {
     if (!flippedCards[index]) {
@@ -147,25 +72,76 @@ const RecommendationCard: React.FC = () => {
     }
   };
 
-  const handleAccept = () => {
+  const handleAccept = async () => {
     if (activeCardIndex !== null) {
-      setFlippedCards(prev => ({
-        ...prev,
-        [activeCardIndex]: true
-      }));
-      setIsModalVisible(false);
+      let type = "";
+      if (activeCardIndex === 0) {
+        type = "Diet";
+      } else if (activeCardIndex === 1) {
+        type = "Exercise";
+      } else if (activeCardIndex === 2) {
+        type = "Routine";
+      }
+      setLoading(true);
+      try {
+        const response = await apiservice.acceptData(
+          patientData?.patientid,
+          type
+        );
+        if(response.status === 200) {
+        setFlippedCards((prev) => ({
+          ...prev,
+          [activeCardIndex]: true,
+        }));
+        setIsModalVisible(false);
+        message.success("Notification send to Your Whatsapp Successfully")
+      }
+      } catch (error) {
+        console.error("Error sending plan via WhatsApp:", error);
+        message.error("Error sending plan via WhatsApp")
+      } finally {
+        setLoading(false); 
+      }
     }
   };
-
 
   const getModalContent = (index: number) => {
     switch (index) {
       case 0:
-        return { title: "Diet Plan", data: dietPlanData };
+        return {
+          title: "Diet Plan",
+          data: Object?.entries(patientData?.Diet_PLAN).map(
+            ([day, plan], idx) => ({
+              day: idx + 1,
+              plan,
+              isCompleted: false,
+            })
+          ),
+        };
       case 1:
-        return { title: "Exercise Plan", data: exercisePlanData };
+        return {
+          title: "Exercise Plan",
+          data: Object?.entries(patientData?.Exercise_PLAN).map(
+            ([day, plan], idx) => ({
+              day: idx + 1,
+              plan,
+              isCompleted: false,
+            })
+          ),
+        };
       case 2:
-        return { title: "Routine Plan", data: routinePlanData };
+        return {
+          title: "Routine Plan",
+          data: patientData.Routine_PLAN
+            ? Object?.entries(patientData?.Routine_PLAN).map(
+                ([day, plan], idx) => ({
+                  day: idx + 1,
+                  plan,
+                  isCompleted: false,
+                })
+              )
+            : [],
+        };
       default:
         return { title: "", data: [] };
     }
@@ -173,16 +149,14 @@ const RecommendationCard: React.FC = () => {
 
   return (
     <>
-     <Card className="shadow-custom rounded-3xl">
-        <Text className="text-[black] font-bold text-lg">
-          Recommendations
-        </Text>
+      <Card className="shadow-custom rounded-3xl">
+        <Text className="text-[black] font-bold text-lg">Recommendations</Text>
         <Row gutter={[16, 16]}>
           {recommendations.map((rec, index) => (
             <Col span={8} key={index}>
               <div
                 className={`flip-card h-[250px] mt-4 ${
-                  flippedCards[index] ? 'is-flipped' : ''
+                  flippedCards[index] ? "is-flipped" : ""
                 }`}
                 onClick={() => showModal(index)}
               >
@@ -192,14 +166,22 @@ const RecommendationCard: React.FC = () => {
                   >
                     <div className="flex justify-between items-center">
                       <div className="flex flex-col items-start">
-                        <h1 className={`${rec.titleClass} text-[32px] font-extrabold`}>
+                        <h1
+                          className={`${rec.titleClass} text-[32px] font-extrabold`}
+                        >
                           {rec.title}
                         </h1>
-                        <h3 className={`${rec.titleClass} text-[16px] font-extrabold`}>
+                        <h3
+                          className={`${rec.titleClass} text-[16px] font-extrabold`}
+                        >
                           {rec.duration}
                         </h3>
                       </div>
-                      <img src={rec.icon} alt={rec.title} className="w-24 h-24 object-contain" />
+                      <img
+                        src={rec.icon}
+                        alt={rec.title}
+                        className="w-24 h-24 object-contain"
+                      />
                     </div>
                   </div>
                   <div
@@ -212,14 +194,22 @@ const RecommendationCard: React.FC = () => {
                     </div>
                     <div className="flex justify-between items-center">
                       <div className="flex flex-col items-start">
-                        <h1 className={`${rec.titleClass} text-[32px] font-extrabold`}>
+                        <h1
+                          className={`${rec.titleClass} text-[32px] font-extrabold`}
+                        >
                           {rec.title}
                         </h1>
-                        <h3 className={`${rec.titleClass} text-[16px] font-extrabold`}>
+                        <h3
+                          className={`${rec.titleClass} text-[16px] font-extrabold`}
+                        >
                           {rec.duration}
                         </h3>
                       </div>
-                      <img src={rec.icon} alt={rec.title} className="w-24 h-24 object-contain" />
+                      <img
+                        src={rec.icon}
+                        alt={rec.title}
+                        className="w-24 h-24 object-contain"
+                      />
                     </div>
                   </div>
                 </div>
@@ -228,7 +218,6 @@ const RecommendationCard: React.FC = () => {
           ))}
         </Row>
       </Card>
-
 
       <Modal
         title={
@@ -244,18 +233,19 @@ const RecommendationCard: React.FC = () => {
         onCancel={() => setIsModalVisible(false)}
         footer={[
           <div key="footer" className="flex gap-1 justify-end">
-            <button
-              className="px-6 py-2 text-gray-600 border rounded-lg"
+            <Button
+               className="!px-6 !py-4 !text-[#fff] border rounded-lg border-[#204496] bg-[#204496] hover:!bg-[#204499] hover:!border-[#204496]"
               onClick={() => setIsModalVisible(false)}
             >
               Cancel
-            </button>
-            <button
-              className="px-6 py-2 text-[#204496] border rounded-lg border-[#204496]"
+            </Button>
+            <Button
+              className="!px-6 !py-4 !text-[#fff] border rounded-lg border-[#204496] bg-[#204496] hover:!bg-[#204499] hover:!border-[#204496]"
               onClick={handleAccept}
+              loading={loading} 
             >
               Accept
-            </button>
+            </Button>
           </div>,
         ]}
         width={600}
@@ -272,7 +262,6 @@ const RecommendationCard: React.FC = () => {
               getModalContent(activeCardIndex).data.map((day) => (
                 <Steps.Step
                   key={day.day}
-                  // title={`${day.day}`}
                   status={
                     day.isCompleted
                       ? "finish"

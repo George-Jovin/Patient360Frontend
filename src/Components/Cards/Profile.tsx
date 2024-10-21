@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, Row, Col } from 'antd';
+import { Card, Row, Col } from "antd";
 import ProfileIcon from "../Assets/Images/PatientProfile-icon.svg";
 import ProfileIcon1 from "../Assets/Images/Profile-icon1.svg";
 import ProfileIcon2 from "../Assets/Images/Profile-icon2.svg";
@@ -22,23 +22,28 @@ interface MetricInfo {
   value: string;
   change: number;
 }
-
+interface PatientData {
+  name: string;
+  mobileno: string;
+  riskrate: number;
+  patientid: number;
+}
 const personalInfoData: PersonalInfo[] = [
   {
     icon: ProfileIcon1,
     label: "Unique Id",
-    value: "xxx xxx xx675"
+    value: "xxx xxx xx675",
   },
   {
     icon: ProfileIcon2,
     label: "Age",
-    value: "48"
+    value: "48",
   },
   {
     icon: ProfileIcon3,
     label: "Gender",
-    value: "Male"
-  }
+    value: "Male",
+  },
 ];
 
 const metricsData: MetricInfo[] = [
@@ -46,37 +51,46 @@ const metricsData: MetricInfo[] = [
     icon: ProfileIcon4,
     label: "Heart Rate",
     value: "89 bpm",
-    change: -16
+    change: -16,
   },
   {
     icon: ProfileIcon5,
     label: "SpO2",
     value: "99%",
-    change: -16
+    change: -16,
   },
   {
     icon: ProfileIcon6,
     label: "Stress",
     value: "69",
-    change: -16
+    change: -16,
   },
   {
     icon: ProfileIcon7,
     label: "Blood Pressure",
     value: "120/80",
-    change: -16
+    change: -16,
   },
   {
     icon: ProfileIcon8,
     label: "Respiratory Rate",
     value: "16 Breaths/min",
-    change: -16
-  }
+    change: -16,
+  },
 ];
+const getRiskScoreColor = (riskScore: number): string => {
+  if (riskScore < 50) return "green";
+  if (riskScore >= 50 && riskScore < 70) return "yellow";
+  return "red";
+};
 
 const PersonalInfoCard: React.FC<PersonalInfo> = ({ icon, label, value }) => (
   <div className="flex flex-row items-center mb-4 gap-8 ml-4">
-    <img src={icon} alt={`${label}-icon`} className="w-1/4" />
+    <img
+      src={icon}
+      alt={`${label}-icon`}
+      className="w-24 h-24 object-contain"
+    />
     <div className="flex flex-col">
       <p className="text-gray-600 text-sm">{label}</p>
       <p className="font-semibold text-[16px]">{value}</p>
@@ -86,7 +100,11 @@ const PersonalInfoCard: React.FC<PersonalInfo> = ({ icon, label, value }) => (
 
 const MetricCard: React.FC<MetricInfo> = ({ icon, label, value, change }) => (
   <div className="flex flex-row items-center gap-8">
-    <img src={icon} alt={`${label}-icon`} className="w-1/4" />
+    <img
+      src={icon}
+      alt={`${label}-icon`}
+      className="w-24 h-24 object-contain"
+    />
     <div className="flex flex-col">
       <p className="text-gray-600 text-sm">{label}</p>
       <p className="font-semibold text-[16px]">{value}</p>
@@ -94,45 +112,60 @@ const MetricCard: React.FC<MetricInfo> = ({ icon, label, value, change }) => (
   </div>
 );
 
-const Profile: React.FC = () => {
+const Profile: React.FC<{ patientData: PatientData }> = ({ patientData }) => {
+  const riskScoreColor = getRiskScoreColor(patientData?.riskrate);
   return (
     <Card className="w-full shadow-lg rounded-3xl">
-      <div className="w-full">
-      <Row gutter={[16, 16]} justify="space-between">
-        <Col span={12}>
-          <div className="flex flex-col items-center mb-6 justify-center">
-            <div className="flex justify-center mb-2 pt-8">
-              <img src={ProfileIcon} alt="user-icon"  className="w-full"/>
+      <div className="w-full h-[600px]">
+        <Row gutter={[16, 16]} justify="space-between">
+          <Col span={12}>
+            <div className="flex flex-col items-center mb-6 justify-center">
+              <div className="flex justify-center mb-2 pt-8">
+                <img src={ProfileIcon} alt="user-icon" className="w-full" />
+              </div>
+              <h2 className="text-[24px] font-bold pb-2">
+                {patientData?.name}
+              </h2>
+              <div
+                className={`gradient-${riskScoreColor} rounded-xl px-2 py-1 border border-${
+                  riskScoreColor === "yellow" ? "yellow-500" : riskScoreColor
+                }-500 mb-12`}
+              >
+                <p
+                  className={`text-${
+                    riskScoreColor === "yellow" ? "yellow-500" : riskScoreColor
+                  }-500 text-xl font-extrabold`}
+                >
+                  Risk Score : {patientData?.riskrate}
+                </p>
+              </div>
+              <div className="w-full">
+                {personalInfoData.map((info, index) => (
+                  <PersonalInfoCard
+                    key={index}
+                    icon={info.icon}
+                    label={info.label}
+                    value={info.value}
+                  />
+                ))}
+              </div>
             </div>
-            <h2 className="text-[24px] font-bold pb-2">John Doe</h2>
-            <div className="gradient-red rounded-2xl px-2 border border-[#EC221F] mb-12"><p className="text-[#EC221F] text-xl font-extrabold">Risk Score : 85</p></div>
-            <div className="w-full">
-              {personalInfoData.map((info, index) => (
-                <PersonalInfoCard
+          </Col>
+
+          <Col span={12}>
+            <div className="space-y-8">
+              {metricsData.map((metric, index) => (
+                <MetricCard
                   key={index}
-                  icon={info.icon}
-                  label={info.label}
-                  value={info.value}
+                  icon={metric.icon}
+                  label={metric.label}
+                  value={metric.value}
+                  change={metric.change}
                 />
               ))}
             </div>
-          </div>
-        </Col>
-        
-        <Col span={12} >
-          <div className="space-y-8">
-            {metricsData.map((metric, index) => (
-              <MetricCard
-                key={index}
-                icon={metric.icon}
-                label={metric.label}
-                value={metric.value}
-                change={metric.change}
-              />
-            ))}
-          </div>
-        </Col>
-      </Row>
+          </Col>
+        </Row>
       </div>
     </Card>
   );
